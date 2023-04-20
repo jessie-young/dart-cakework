@@ -1,2 +1,5 @@
-A sample command-line application with an entrypoint in `bin/`, library code
-in `lib/`, and example unit test in `test/`.
+Sample usage:
+`dart bin/detect_dart_framework.dart ../dart_frog_project`
+
+Should return 
+`Detected Dart Frog framework`
