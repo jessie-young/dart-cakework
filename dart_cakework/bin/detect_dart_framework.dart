@@ -2,37 +2,39 @@ import 'dart:io';
 // import 'package:package_config/package_config.dart';
 import 'package:yaml/yaml.dart';
 
-void detectServerFramework(String projectDirectory) async {
+Future<String?> detectServerFramework(String projectDirectory) async {
   // convert projectDirectory which can be relative to a Directory object
   Directory directory = Directory(projectDirectory);
 
-  print("got directory.path");
-  print(directory.path);
   // Read in the pubspec.yaml file
   File pubspecFile = File('${directory.path}/pubspec.yaml');
   String pubspecContent = pubspecFile.readAsStringSync();
   Map yaml = loadYaml(pubspecContent);
 
   if (yaml['dependencies'].containsKey('shelf')) {
-    print('Detected Shelf framework');
-    return;
+    return "shelf";
   }
   if (yaml['dependencies'].containsKey('dart_frog')) {
-    print('Detected Dart Frog framework');
-    return;
+    return "dart_frog";
   }
   if (yaml['dependencies'].containsKey('serverpod')) {
-    print('Detected Serverpod framework');
-    return;
+    return "serverpod";
   }
+
+  return null;
   // TODO add other frameworks
 }
 
-void main(List<String> args) {
+Future<void> main(List<String> args) async {
   if (args.isEmpty) {
     print('Usage: dart detect_dart_framework.dart <directory>');
     return;
   }
 
-  detectServerFramework(args[0]);
+  String? framework = await detectServerFramework(args[0]);
+  if (framework != null) {
+    print('Detected server framework: $framework');
+  } else {
+    print('No server framework detected');
+  }
 }
